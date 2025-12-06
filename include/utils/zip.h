@@ -23,6 +23,10 @@ namespace O
 	requires std::ranges::sized_range<R>
 	class Zip_Adjacent_Circular_View;
 
+	template <std::ranges::random_access_range R, bool circular>
+	requires std::ranges::sized_range<R>
+	class Zip_Adjacent_View;
+
 	// Factory helpers (take lvalue references to ranges)
 	template <std::ranges::random_access_range R1, std::ranges::random_access_range R2>
 	requires std::ranges::sized_range<R1> && std::ranges::sized_range<R2>
@@ -48,9 +52,24 @@ namespace O
 	 */
 	template <std::ranges::random_access_range R>
 	requires std::ranges::sized_range<R>
-	constexpr Zip_Adjacent_Circular_View<R> Zip_Adjacent_Circular(R& a) noexcept
+	constexpr Zip_Adjacent_View<R,true> Zip_Adjacent_Circular(R& a) noexcept
 	{
-		return Zip_Adjacent_Circular_View<R>(a);
+		return Zip_Adjacent_View<R,true>(a);
+	}
+
+	/**
+	 * @brief Zip i and i+1 element of a container to use inside a for loop. stop at n-2 to avoid overflow
+	 * 
+	 * @tparam R the type inside the container
+	 * @param a the container
+	 * @return a view inside the container wich return [a[i],a[i+1]]
+	 * @note this version stop at n-2
+	 */
+	template <std::ranges::random_access_range R>
+	requires std::ranges::sized_range<R>
+	constexpr Zip_Adjacent_View<R,false> Zip_Adjacent(R& a) noexcept
+	{
+		return Zip_Adjacent_View<R,false>(a);
 	}
 	
 

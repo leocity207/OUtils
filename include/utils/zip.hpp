@@ -149,9 +149,9 @@ namespace O
 		constexpr Size_Type size() const noexcept { return m_size; }
 	};
 
-	template <std::ranges::random_access_range R>
+	template <std::ranges::random_access_range R, bool circular>
 	requires std::ranges::sized_range<R>
-	class Zip_Adjacent_Circular_View {
+	class Zip_Adjacent_View {
 	public:
 		using Size_Type = std::size_t;
 		using Ref_T = std::ranges::range_reference_t<R>;
@@ -162,7 +162,7 @@ namespace O
 		Size_Type m_size;
 
 	public:
-		constexpr Zip_Adjacent_Circular_View(R& r) noexcept : 
+		constexpr Zip_Adjacent_View(R& r) noexcept : 
 			m_r(std::addressof(r)),
 			m_size(static_cast<Size_Type>(std::ranges::size(r))) 
 		{
@@ -204,8 +204,8 @@ namespace O
 		};
 
 		constexpr Iterator begin() const noexcept { return Iterator(m_r, 0u, m_size); }
-		constexpr Iterator end()   const noexcept { return Iterator(m_r, m_size, m_size); }
-		constexpr Size_Type size() const noexcept { return m_size; }
+		constexpr Iterator end()   const noexcept { return Iterator(m_r, circular ? m_size : (m_size - 1), m_size); }
+		constexpr Size_Type size() const noexcept { return circular ? m_size : (m_size - 1); }
 	};
 
 
