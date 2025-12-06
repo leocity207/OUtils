@@ -149,6 +149,65 @@ namespace O
 		constexpr Size_Type size() const noexcept { return m_size; }
 	};
 
+	template <std::ranges::random_access_range R, bool circular>
+	requires std::ranges::sized_range<R>
+	class Zip_Adjacent_View {
+	public:
+		using Size_Type = std::size_t;
+		using Ref_T = std::ranges::range_reference_t<R>;
+		using Elem_T = std::remove_reference_t<Ref_T>;
+
+	private:
+		R* m_r;
+		Size_Type m_size;
+
+	public:
+		constexpr Zip_Adjacent_View(R& r) noexcept : 
+			m_r(std::addressof(r)),
+			m_size(static_cast<Size_Type>(std::ranges::size(r))) 
+		{
+
+		}
+
+		struct Proxy
+		{
+			Ref_T p;
+			Ref_T p_1;
+		};
+
+		struct Iterator {
+			R* r;
+			Size_Type idx;
+			Size_Type size;
+
+			constexpr Iterator(R* rr, Size_Type i, Size_Type s) noexcept : 
+				r(rr), 
+				idx(i), 
+				size(s)
+			{
+
+			}
+
+			constexpr bool operator==(const Iterator& o) const noexcept { return idx == o.idx; }
+			constexpr bool operator!=(const Iterator& o) const noexcept { return !(*this == o); }
+
+			constexpr Iterator& operator++() noexcept { ++idx; return *this; }
+			constexpr Iterator operator++(int) noexcept { Iterator tmp = *this; ++(*this); return tmp; }
+
+			constexpr Proxy operator*() const noexcept 
+			{
+				return Proxy{ 
+					std::ranges::range_reference_t<R>( (*r)[idx] ),
+					std::ranges::range_reference_t<R>( (*r)[(idx+1)%size] )
+				};
+			}
+		};
+
+		constexpr Iterator begin() const noexcept { return Iterator(m_r, 0u, m_size); }
+		constexpr Iterator end()   const noexcept { return Iterator(m_r, circular ? m_size : (m_size - 1), m_size); }
+		constexpr Size_Type size() const noexcept { return circular ? m_size : (m_size - 1); }
+	};
+
 
 
 	template <std::ranges::forward_range Range, typename Func>
