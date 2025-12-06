@@ -151,7 +151,7 @@ namespace O
 
 	template <std::ranges::random_access_range R>
 	requires std::ranges::sized_range<R>
-	class Zip_Adjacent_View {
+	class Zip_Adjacent_Circular_View {
 	public:
 		using Size_Type = std::size_t;
 		using Ref_T = std::ranges::range_reference_t<R>;
@@ -162,7 +162,7 @@ namespace O
 		Size_Type m_size;
 
 	public:
-		constexpr Zip_Adjacent_View(R& r) noexcept : 
+		constexpr Zip_Adjacent_Circular_View(R& r) noexcept : 
 			m_r(std::addressof(r)),
 			m_size(static_cast<Size_Type>(std::ranges::size(r))) 
 		{

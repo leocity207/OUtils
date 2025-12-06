@@ -8,9 +8,13 @@ Overview
 
 .. doxygenfunction:: O::Zip_Index
 
+.. doxygenfunction:: O::Zip_Adjacent_Circular
+
 .. doxygenfunction:: O::For_Each_Indexed
 
 .. doxygenfunction:: O::For_Each_Zip
+
+
 
 Basic Usage
 -----------
@@ -59,3 +63,15 @@ Using O::For_Each_Indexed
 	{
 		a_elt + index;
 	});
+
+
+Using O::Zip_Adjacent_Circular
+.. code-block:: cpp
+
+	std::vector<int> a = {1,2,3,2,1,-1,2};
+
+	std::vector<int> mean_filter;
+	for(auto&& [a_i, a_i_1] : O::Zip_Adjacent_Circular(a))
+	{
+		mean_filter= (a_i_1 - a_i)/2;
+	}
