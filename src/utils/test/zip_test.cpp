@@ -103,6 +103,22 @@ TEST(Zip_Test, Zip_Index_View_Iterates_And_Reports_Index)
 	EXPECT_EQ(v[2], 'C');
 }
 
+TEST(Zip_Test, Zip_Adjacent_As_Used)
+{
+	std::vector<int> a{ 1,1,1,1,1,1 };
+
+	// iterate using iterator and ensure proxy exposes elements
+	int filter = 0;
+	for (auto&& [i,i_1] : O::Zip_Adjacent(a))
+	{
+		// check values
+		EXPECT_EQ(i, i_1);
+		filter = i_1 - i;
+	}
+	EXPECT_EQ(filter,0);
+}
+
+
 TEST(Zip_Test, Zip_Index_View_As_Used)
 {
 	std::vector<char> v{ 'x','y','z' };

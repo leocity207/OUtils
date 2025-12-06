@@ -19,6 +19,10 @@ namespace O
 	requires std::ranges::sized_range<R>
 	class Zip_Index_View;
 
+	template <std::ranges::random_access_range R>
+	requires std::ranges::sized_range<R>
+	class Zip_Adjacent_View;
+
 	// Factory helpers (take lvalue references to ranges)
 	template <std::ranges::random_access_range R1, std::ranges::random_access_range R2>
 	requires std::ranges::sized_range<R1> && std::ranges::sized_range<R2>
@@ -33,6 +37,14 @@ namespace O
 	{
 		return Zip_Index_View<R>(a);
 	}
+
+	template <std::ranges::random_access_range R>
+	requires std::ranges::sized_range<R>
+	constexpr Zip_Adjacent_View<R> Zip_Adjacent(R& a) noexcept
+	{
+		return Zip_Adjacent_View<R>(a);
+	}
+	
 
 	// for_each_indexed(range, func)
 	// func(elem_ref, index)
