@@ -25,3 +25,4 @@ Oconfigurator Is a Small header only c++20 Serializer/Deserializer for configura
 	cplusplus/expected.rst
 	cplusplus/tuple_helper.rst
 	cplusplus/zip.rst
+	cplusplus/bounded_array.rst
