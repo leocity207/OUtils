@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3] - 2025-12-16
+
+### Added
+
+* `Bounded_Array`: added Bounded Array class
+
+
 ## [0.0.2] - 2025-12-06
 
 ### Added
