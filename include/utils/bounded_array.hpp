@@ -98,14 +98,14 @@ const T& O::Bounded_Vector<T, N>::operator[](std::size_t i) const noexcept { ret
 template<typename T, std::size_t N>
 T& O::Bounded_Vector<T, N>::At(std::size_t i)
 {
-	if (i >= m_size) throw Exception{Exception::Type::OUT_OF_RANGE};
+	if (i >= m_size) throw Bounded_Vector_Exception::OUT_OF_RANGE;
 	return *Ptr_At(i);
 }
 
 template<typename T, std::size_t N>
 const T& O::Bounded_Vector<T, N>::At(std::size_t i) const
 {
-	if(i >= m_size)  throw Exception{Exception::Type::OUT_OF_RANGE};
+	if(i >= m_size)  throw Bounded_Vector_Exception::OUT_OF_RANGE;
 	return *Ptr_At(i);
 }
 
@@ -120,7 +120,7 @@ template<typename T, std::size_t N>
 template<class... Args>
 void O::Bounded_Vector<T, N>::Emplace_Back(Args&&... args)
 {
-	if(Full()) throw  Exception{Exception::Type::NO_MORE_PLACE_TO_EMPLACE};
+	if(Full()) throw  Bounded_Vector_Exception::NO_MORE_PLACE_TO_EMPLACE;
 	new (&m_buffer[m_size]) T(std::forward<Args>(args)...);
 	++m_size;
 }
@@ -134,7 +134,7 @@ void O::Bounded_Vector<T, N>::Push_Back(T&& v) { Emplace_Back(std::move(v)); }
 template<typename T, std::size_t N>
 void O::Bounded_Vector<T, N>::Pop_Back()
 {
-	if(Empty()) throw Exception{Exception::Type::NO_MORE_ELEMENT_TO_POP};
+	if(Empty()) throw Bounded_Vector_Exception::NO_MORE_ELEMENT_TO_POP;
 	--m_size;
 	Ptr_At(m_size)->~T();
 }
@@ -166,5 +166,17 @@ const T* O::Bounded_Vector<T, N>::cbegin() const noexcept { return Data(); }
 
 template<typename T, std::size_t N>
 const T* O::Bounded_Vector<T, N>::cend() const noexcept { return Data() + m_size; }
+
+template<typename T, std::size_t N>
+template<typename... Args>
+requires (sizeof...(Args) <= N) && (std::constructible_from<T, Args> && ...)
+constexpr O::Bounded_Vector<T, N>::Bounded_Vector(Args&&... args)
+{
+	std::size_t i = 0;
+	(
+		(::new (static_cast<void*>(Ptr_At(i++))) T(std::forward<Args>(args))),...
+	);
+	m_size = sizeof...(Args);
+}
 
 #endif // UTILS_BOUNDED_ARRAY_HPP

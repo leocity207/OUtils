@@ -22,6 +22,17 @@ namespace O
 	 * @tparam T Type of stored elements.
 	 * @tparam N Maximum number of elements the container can hold.
 	 */
+
+
+	enum class Bounded_Vector_Exception
+	{
+		NO_ERROR = 0,
+		OUT_OF_RANGE,
+		NO_MORE_ELEMENT_TO_POP,
+		NO_MORE_PLACE_TO_EMPLACE
+	};
+
+
 	template<typename T, std::size_t N>
 	class Bounded_Vector 
 	{
@@ -30,17 +41,7 @@ namespace O
 		 * @brief Lightweight exception payload used by member functions.
 		 *        Only contains a `Type` discriminant; users may inspect the `type` field to determine the cause (out-of-range access, push on full container, pop on empty container).
 		 */
-		struct Exception
-		{
-			enum class Type
-			{
-				NO_ERROR = 0,
-				OUT_OF_RANGE,
-				NO_MORE_ELEMENT_TO_POP,
-				NO_MORE_PLACE_TO_EMPLACE
-			};
-			Type type;
-		};
+
 	private:
 		// storage: uninitialized, properly aligned memory for up to N objects of T
 		using storage_t = std::aligned_storage_t<sizeof(T), alignof(T)>;
@@ -71,6 +72,9 @@ namespace O
 		Bounded_Vector(Bounded_Vector&& other) noexcept(std::is_nothrow_move_constructible<T>::value);
 		Bounded_Vector& operator=(const Bounded_Vector& other);
 		Bounded_Vector& operator=(Bounded_Vector&& other) noexcept(std::is_nothrow_move_constructible<T>::value);
+		template<typename... Args>
+		requires (sizeof...(Args) <= N) && (std::constructible_from<T, Args> && ...)
+		explicit constexpr Bounded_Vector(Args&&... args);
 		/** @} */
 
 		/** @name Capacity / state
