@@ -1,11 +1,16 @@
 # Changelog
 
+## [0.0.4] - 2025-12-21
+
+### Added
+
+* `Unowned_Ptr`: added Unowned_Ptr
+  
 ## [0.0.3] - 2025-12-16
 
 ### Added
 
 * `Bounded_Array`: added Bounded Array class
-
 
 ## [0.0.2] - 2025-12-06
 
