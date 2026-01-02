@@ -4,6 +4,16 @@
 
 ### Added
 
+* `Comb`: added Comb class to pars container as a comb
+
+### Fix
+
+* `Unowned_Ptr`: remove default test
+
+## [0.0.4] - 2025-12-21
+
+### Added
+
 * `Unowned_Ptr`: added Unowned_Ptr
   
 ## [0.0.3] - 2025-12-16
